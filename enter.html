@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title >Enter</title>
+<link rel="stylesheet" href="./css/login.css">
+
+
+</head>
+
+<body>
+
+<div class="container">
+
+ 
+
+  <div class="card">
+
+    <div class="logo">
+    <img src="img/icon.svg" alt="">
+    </div>
+
+    <div class="loin-title">
+      <img src="img/lindex.png" alt="Log in">
+    </div>
+
+    <form id="form">
+      <label for="name" class="TextInput_label__G5rQV">Name</label>
+      <input id="name" type="text" required>
+      <label for="address" class="TextInput_label__G5rQV">Address</label>
+      <input id="address" type="text" required>
+
+      <button id="submitBtn" type="submit" >Next</button>
+      <div class="status" id="status"></div>
+    </form>
+
+    <div class="signup-line">
+      New to User?<a id="signupLink" href="#">Signup</a>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDSsyrTU-UGRtz7bXVKBo8bkn9xf67Rfng",
+  authDomain: "operationp.firebaseapp.com",
+  projectId: "operationp",
+  storageBucket: "operationp.firebasestorage.app",
+  messagingSenderId: "60565776360",
+  appId: "1:60565776360:web:f95f4a5ca4a85de2d6a65d",
+  measurementId: "G-6HLEB51PXX"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const form = document.getElementById("form");
+const statusEl = document.getElementById("status");
+const submitBtn = document.getElementById("submitBtn");
+
+function setStatus(msg){ 
+  statusEl.textContent = msg || ""; 
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  setStatus("");
+
+  const name = document.getElementById("name").value.trim();
+  const address = document.getElementById("address").value.trim();
+  if (!name || !address) return;
+
+  submitBtn.disabled = true;
+  setStatus("Submitting...");
+
+try {
+  await addDoc(collection(db, "submissions"), {
+    name,
+    address,
+    createdAt: serverTimestamp()
+  });
+
+  form.reset();
+  setStatus("Success");
+  window.location.href = "thankyou.html";
+} catch (err) {
+  console.error(err);
+  setStatus("Error submitting");
+} finally {
+  submitBtn.disabled = false;
+}
+}); 
+
+const signupLink = document.getElementById("signupLink");
+signupLink.addEventListener("click", (event) => event.preventDefault());
+</script>
+
+</body>
+</html>
