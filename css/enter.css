@@ -154,11 +154,10 @@ button:active {
 
 .TextInput_label__G5rQV {
     
-   margin-top: 20px;
-    color: var(--gray-400);
-    font-size: 13px;
-    font-weight: 600;
-    opacity: 0.6; /* 0 = fully transparent, 1 = fully solid */
+   margin-top: 10px;
+   opacity: 0.8; /* 0 = fully transparent, 1 = fully solid */
+
+
 }
 
 
@@ -170,5 +169,6 @@ button:active {
   width: 100px;   /* adjust size */
   max-width: 100%;
   height: auto;
+  margin-bottom: 20px;
 }
 
