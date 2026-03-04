@@ -172,3 +172,22 @@ button:active {
   margin-bottom: 20px;
 }
 
+.popup{
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+  z-index: 999;
+}
+
+.popup.show{
+  opacity: 1;
+}
