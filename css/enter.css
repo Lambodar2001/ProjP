@@ -46,15 +46,18 @@ body{
 }
 
 .card{
-  background:white;
-  padding:30px 22px;
-  border-radius:10px;
-  box-shadow:0 15px 40px rgba(0,0,0,.15);
+  background: white;
+  padding: 30px 22px;
+  border-radius: 10px;
+  box-shadow: 0 15px 40px rgba(0,0,0,.15);
+  width: 90%;
+  max-width: 400px;
+  margin: auto;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px){
   body{
-    padding:20px 0;
+    padding:20px 10px;
   }
 
   .card{
@@ -155,7 +158,7 @@ button:active {
 .TextInput_label__G5rQV {
     
    margin-top: 10px;
-   opacity: 0.8; /* 0 = fully transparent, 1 = fully solid */
+   opacity: 0.9; /* 0 = fully transparent, 1 = fully solid */
 
 
 }
